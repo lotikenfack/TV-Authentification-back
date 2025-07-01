@@ -6,6 +6,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.timezone import now
 from .models import AccessKey
 from .serializers import LoginSerializer, AccessKeySerializer
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 class LoginView(APIView):
     def post(self, request):
@@ -75,3 +77,19 @@ class LogoutView(APIView):
         refresh.blacklist()
 
         return Response({'status': 'logged out'}, status=200)
+
+@csrf_exempt
+def run_maintenance(request):
+    if request.method == 'GET':
+        # Invalidate expired or quota-exceeded keys
+        keys = AccessKey.objects.filter(is_active=True)
+        for key in keys:
+            if key.is_quota_exceeded or key.has_credential_expired:
+                key.invalidate_key()
+
+        # Delete keys scheduled for deletion
+        keys_to_delete = AccessKey.objects.filter(is_active=False, scheduled_for_deletion__lte=now())
+        keys_to_delete.delete()
+
+        return JsonResponse({'status': 'Maintenance tasks executed successfully'})
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

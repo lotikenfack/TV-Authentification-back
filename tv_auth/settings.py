@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+# from dotenv import load_dotenv
+
+# Charger les variables d'environnement
+# load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,11 +89,11 @@ WSGI_APPLICATION = 'tv_auth.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tv_auth_db',
-        'USER': 'tv_auth_user',
-        'PASSWORD': 'tv_auth_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_NAME', 'tv_auth_db'),
+        'USER': os.environ.get('DB_USER', 'tv_auth_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'tv_auth_password'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
