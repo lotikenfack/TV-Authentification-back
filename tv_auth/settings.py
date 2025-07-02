@@ -85,15 +85,22 @@ WSGI_APPLICATION = 'tv_auth.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# print("Database Engine:", os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'))
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
+        'ENGINE': os.environ.get('DB_ENGINE'),
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
+        'OPTIONS': {
+            'sql_mode': os.environ.get('SQL_MODE', 'STRICT_ALL_TABLES'),
+            # "init_command": os.environ.get('INIT_COMMAND'),
+            # 'connect_timeout': 20,  # Increase connection timeout
+            # 'read_timeout': 30,     # Increase read timeout
+            # 'write_timeout': 30,    # Increase write timeout
+        },
     }
 }
 
