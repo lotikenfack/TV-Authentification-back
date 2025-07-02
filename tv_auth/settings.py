@@ -89,9 +89,9 @@ WSGI_APPLICATION = 'tv_auth.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.environ.get('DB_NAME', 'tv_auth_db'),
-        'USER': os.environ.get('DB_USER', 'tv_auth_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'tv_auth_password'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
