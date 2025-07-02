@@ -164,6 +164,8 @@ REST_FRAMEWORK = {
     ],
 }
 
+STATIC_URL = 'static/'
+
 # Configuration pour SimpleJWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
