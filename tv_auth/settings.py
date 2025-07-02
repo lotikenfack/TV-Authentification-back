@@ -137,11 +137,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+SWAGGER_SETTINGS = {
+   'LOGIN_URL': '/admin/login',
+   'LOGOUT_URL':'/admin/logout'
+}
+LOGIN_URL = '/admin/login/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # Default primary key field type
