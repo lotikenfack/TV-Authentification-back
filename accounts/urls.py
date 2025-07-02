@@ -5,5 +5,5 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('session/status/', SessionStatusView.as_view(), name='session_status'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('api/run_maintenance/', run_maintenance, name='run_maintenance'),
+    path('run_maintenance/', run_maintenance, name='run_maintenance'),
 ]
