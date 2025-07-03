@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../TV-Authentification-front"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}
