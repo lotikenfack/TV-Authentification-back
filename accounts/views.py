@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.timezone import now
 from .models import AccessKey
 from .serializers import LoginSerializer, AccessKeySerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import viewsets, permissions
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -93,3 +95,22 @@ def run_maintenance(request):
 
         return JsonResponse({'status': 'Maintenance tasks executed successfully'})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+class AccessKeyViewSet(viewsets.ModelViewSet):
+    queryset = AccessKey.objects.all()
+    serializer_class = AccessKeySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        password = self.request.data.get('password')
+        instance = serializer.save()
+        if password:
+            instance.set_password(password)
+            instance.save()
+
+    def perform_update(self, serializer):
+        password = self.request.data.get('password')
+        instance = serializer.save()
+        if password and not password.startswith('pbkdf2_'):
+            instance.set_password(password)
+            instance.save()
