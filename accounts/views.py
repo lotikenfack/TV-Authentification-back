@@ -9,6 +9,7 @@ from .serializers import LoginSerializer, AccessKeySerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions
+from .authentication import AccessKeyTokenAuthentication
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -41,13 +42,14 @@ class LoginView(APIView):
             access_key.save()
 
             refresh = RefreshToken.for_user(access_key)
-            return Response({'access': str(refresh.access_token), 'refresh': str(refresh)}, status=200)
+            return Response({'access': str(refresh.access_token), 'refresh': str(refresh), 'token:':str(access_key.password)}, status=200)
 
         except AccessKey.DoesNotExist:
             return Response({'error': 'Access key not found'}, status=404)
 
 class SessionStatusView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [AccessKeyTokenAuthentication]
+    permission_classes = []
 
     def get(self, request):
         access_key = request.user
@@ -65,7 +67,8 @@ class SessionStatusView(APIView):
         return Response({'status': 'active', 'minutes_used': access_key.total_minutes_used}, status=200)
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [AccessKeyTokenAuthentication]
+    permission_classes = []
 
     def post(self, request):
         access_key = request.user
@@ -75,8 +78,8 @@ class LogoutView(APIView):
             access_key.current_session_start_time = None
             access_key.save()
 
-        refresh = RefreshToken(request.auth)
-        refresh.blacklist()
+        # refresh = RefreshToken(request.auth)
+        # refresh.blacklist()
 
         return Response({'status': 'logged out'}, status=200)
 
